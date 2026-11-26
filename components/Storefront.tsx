@@ -290,7 +290,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                     key={id}
                     className="relative w-[62%] max-w-60 shrink-0 snap-start overflow-hidden rounded-3xl bg-ink text-white sm:w-56 lg:w-60"
                   >
-                    <ProductPhoto product={p} size={520} className="aspect-[4/5] w-full" />
+                    <ProductPhoto product={p} size={520} pack={false} className="aspect-[4/5] w-full" />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink via-ink/75 to-transparent p-3 pt-12">
                       <p className="font-semibold">{p.name}</p>
                       <p className="text-sm text-white/75">{p.unit}</p>
@@ -345,6 +345,8 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
 
         <p className="mt-8 text-center text-xs leading-relaxed text-muted">
           الحد الأدنى للطلب {MIN_ORDER} ج.م، والتوصيل {DELIVERY_FEE} ج.م لأي أوردر. الدفع كاش عند الاستلام.
+          <br />
+          صور العبوات من Open Food Facts (CC BY-SA)، وباقي الصور من Unsplash.
         </p>
       </main>
 

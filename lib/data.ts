@@ -26,33 +26,34 @@ export type Product = {
   cat: string;
   emoji: string;
   img: string; // رقم الصورة على Unsplash
+  pack?: string; // صورة العبوة من Open Food Facts (CC BY-SA)
   weight: number; // قد إيه الصنف مطلوب (لتوليد أوردرات الديمو)
 };
 
 export const products: Product[] = [
   { id: "sugar", name: "سكر الضحى", img: "1641679103706-fc8542e2a97a", unit: "1 كجم", price: 37, cost: 33.5, cat: "grocery", emoji: "🥄", weight: 10 },
   { id: "rice", name: "أرز الضحى", img: "1705147289789-6df2593f1b1e", unit: "1 كجم", price: 39, cost: 35, cat: "grocery", emoji: "🍚", weight: 10 },
-  { id: "pasta", name: "مكرونة الملكة", img: "1598720290281-9f26ae6d6f81", unit: "400 جم", price: 17, cost: 15, cat: "grocery", emoji: "🍝", weight: 9 },
+  { id: "pasta", name: "مكرونة الملكة", pack: "085/006/915/0143/front_en.3.400.jpg", img: "1598720290281-9f26ae6d6f81", unit: "400 جم", price: 17, cost: 15, cat: "grocery", emoji: "🍝", weight: 9 },
   { id: "flour", name: "دقيق الضحى", img: "1774793476321-70f77d85a3a7", unit: "1 كجم", price: 26, cost: 23, cat: "grocery", emoji: "🌾", weight: 5 },
   { id: "lentils", name: "عدس أصفر الضحى", img: "1770617476260-1addeea7c826", unit: "500 جم", price: 42, cost: 37, cat: "grocery", emoji: "🫘", weight: 4 },
-  { id: "beans", name: "فول مدمس حدائق كاليفورنيا", img: "1612504258838-fbf14fe4437d", unit: "400 جم", price: 19, cost: 16.5, cat: "grocery", emoji: "🥫", weight: 6 },
+  { id: "beans", name: "فول مدمس حدائق كاليفورنيا", pack: "003/289/403/2126/front_en.14.400.jpg", img: "1612504258838-fbf14fe4437d", unit: "400 جم", price: 19, cost: 16.5, cat: "grocery", emoji: "🥫", weight: 6 },
   { id: "tuna", name: "تونة صن شاين قطع", img: "1593969430155-d2b315c03c6d", unit: "185 جم", price: 68, cost: 61, cat: "grocery", emoji: "🐟", weight: 6 },
-  { id: "paste", name: "صلصة هاينز", img: "1610135373101-89aeeab8fa50", unit: "320 جم", price: 24, cost: 21, cat: "grocery", emoji: "🍅", weight: 6 },
+  { id: "paste", name: "صلصة هاينز", pack: "05737804/front_fr.5.400.jpg", img: "1610135373101-89aeeab8fa50", unit: "320 جم", price: 24, cost: 21, cat: "grocery", emoji: "🍅", weight: 6 },
 
   { id: "sunoil", name: "زيت كريستال عباد الشمس", img: "1552592074-ea7a91b851b3", unit: "1 لتر", price: 92, cost: 85, cat: "oils", emoji: "🌻", weight: 9 },
   { id: "mixoil", name: "زيت سلايت خليط", img: "1720468750623-39e9a09f5067", unit: "800 مل", price: 68, cost: 62, cat: "oils", emoji: "🍳", weight: 5 },
   { id: "ghee", name: "سمن روابي", img: "1741461544812-9ed4e9dcdd01", unit: "1 كجم", price: 125, cost: 114, cat: "oils", emoji: "🧈", weight: 4 },
 
-  { id: "tea", name: "شاي العروسة", img: "1606163017137-888c0177b3dd", unit: "250 جم", price: 78, cost: 71, cat: "drinks", emoji: "🍵", weight: 7 },
-  { id: "coffee", name: "نسكافيه كلاسيك", img: "1648127688766-16c834c5f558", unit: "100 جم", price: 165, cost: 150, cat: "drinks", emoji: "☕", weight: 2 },
-  { id: "water", name: "مياه نستله بيور لايف", img: "1536939459926-301728717817", unit: "6 × 1.5 لتر", price: 54, cost: 47, cat: "drinks", emoji: "💧", weight: 10 },
+  { id: "tea", name: "شاي العروسة", pack: "622/200/230/0337/front_en.3.400.jpg", img: "1606163017137-888c0177b3dd", unit: "250 جم", price: 78, cost: 71, cat: "drinks", emoji: "🍵", weight: 7 },
+  { id: "coffee", name: "نسكافيه كلاسيك", pack: "89009758/front_en.3.400.jpg", img: "1648127688766-16c834c5f558", unit: "100 جم", price: 165, cost: 150, cat: "drinks", emoji: "☕", weight: 2 },
+  { id: "water", name: "مياه نستله بيور لايف", pack: "885/012/400/3850/front_en.5.400.jpg", img: "1536939459926-301728717817", unit: "6 × 1.5 لتر", price: 54, cost: 47, cat: "drinks", emoji: "💧", weight: 10 },
   { id: "juice", name: "عصير جهينة بيور", img: "1600271886742-f049cd451bba", unit: "1 لتر", price: 38, cost: 33, cat: "drinks", emoji: "🧃", weight: 5 },
-  { id: "soda", name: "بيبسي", img: "1700328971815-854758899c06", unit: "2.25 لتر", price: 37, cost: 33, cat: "drinks", emoji: "🥤", weight: 4 },
+  { id: "soda", name: "بيبسي", pack: "406/080/000/1740/front_en.88.400.jpg", img: "1700328971815-854758899c06", unit: "2.25 لتر", price: 37, cost: 33, cat: "drinks", emoji: "🥤", weight: 4 },
 
-  { id: "milk", name: "لبن جهينة كامل الدسم", img: "1634141510639-d691d86f47be", unit: "1 لتر", price: 48, cost: 43.5, cat: "dairy", emoji: "🥛", weight: 8 },
+  { id: "milk", name: "لبن جهينة كامل الدسم", pack: "622/300/035/0003/front_en.6.400.jpg", img: "1634141510639-d691d86f47be", unit: "1 لتر", price: 48, cost: 43.5, cat: "dairy", emoji: "🥛", weight: 8 },
   { id: "eggs", name: "بيض أبيض", img: "1506976785307-8732e854ad03", unit: "طبق 30", price: 165, cost: 152, cat: "dairy", emoji: "🥚", weight: 7 },
-  { id: "feta", name: "جبنة دومتي بيضاء", img: "1661349008073-136bed6e6788", unit: "500 جم", price: 62, cost: 55, cat: "dairy", emoji: "🧀", weight: 6 },
-  { id: "triangles", name: "جبنة لافاش كيري مثلثات", img: "1683314573424-b0da0c795a07", unit: "24 قطعة", price: 95, cost: 86, cat: "dairy", emoji: "🧀", weight: 3 },
+  { id: "feta", name: "جبنة دومتي بيضاء", pack: "622/300/075/2982/front_en.8.400.jpg", img: "1661349008073-136bed6e6788", unit: "500 جم", price: 62, cost: 55, cat: "dairy", emoji: "🧀", weight: 6 },
+  { id: "triangles", name: "جبنة لافاش كيري مثلثات", pack: "307/378/115/8830/front_fr.5.400.jpg", img: "1683314573424-b0da0c795a07", unit: "24 قطعة", price: 95, cost: 86, cat: "dairy", emoji: "🧀", weight: 3 },
 
   { id: "powder", name: "برسيل أوتوماتيك", img: "1593095948071-474c5cc2989d", unit: "4 كجم", price: 315, cost: 285, cat: "cleaning", emoji: "🧺", weight: 4 },
   { id: "dish", name: "بريل سائل أطباق", img: "1582020711621-ab153a0f3631", unit: "1 لتر", price: 58, cost: 50, cat: "cleaning", emoji: "🧽", weight: 6 },
@@ -70,6 +71,10 @@ export const HERO_IMG = "1588964895597-cfccd6e2dbf9";
 
 export function photo(id: string, width: number, height: number): string {
   return `https://images.unsplash.com/photo-${id}?w=${width}&h=${height}&fit=crop&auto=format&q=70`;
+}
+
+export function packPhoto(path: string): string {
+  return `https://images.openfoodfacts.org/images/products/${path}`;
 }
 
 export const featuredIds = ["rice", "sunoil", "eggs", "water", "milk", "tea"];
