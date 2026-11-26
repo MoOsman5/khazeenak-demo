@@ -22,4 +22,4 @@ npm run dev
 
 نسخة ثابتة للرفع على أي استضافة: `STATIC_EXPORT=1 npm run build` والناتج في `out`.
 
-الصور من Unsplash (ترخيص مجاني) ومتحمّلة من سيرفراتهم مباشرة. أرقامها في `lib/data.ts`، وبدّلها بصور المنتجات الفعلية.
+صور الأصناف رسومات SVG أصلية في `components/PackArt.tsx` (الشكل واللون لكل صنف في `lib/data.ts`). صورة الهيرو من Unsplash.

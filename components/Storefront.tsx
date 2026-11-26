@@ -288,14 +288,16 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                 return (
                   <article
                     key={id}
-                    className="relative w-[62%] max-w-60 shrink-0 snap-start overflow-hidden rounded-3xl bg-ink text-white sm:w-56 lg:w-60"
+                    className="w-[58%] max-w-56 shrink-0 snap-start overflow-hidden rounded-3xl bg-white sm:w-52 lg:w-56"
                   >
-                    <ProductPhoto product={p} size={520} pack={false} className="aspect-[4/5] w-full" />
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink via-ink/75 to-transparent p-3 pt-12">
-                      <p className="font-semibold">{p.name}</p>
-                      <p className="text-sm text-white/75">{p.unit}</p>
+                    <ProductPhoto product={p} className="aspect-square w-full" />
+                    <div className="p-3">
+                      <p className="truncate font-semibold">{p.name}</p>
+                      <p className="text-sm text-muted">{p.unit}</p>
                       <div className="mt-2 flex items-center justify-between gap-2">
-                        <p className="font-display text-lg font-extrabold tabular-nums">{egp(p.price)} ج.م</p>
+                        <p className="font-display text-lg font-extrabold tabular-nums">
+                          {egp(p.price)} <span className="text-xs font-normal text-muted">ج.م</span>
+                        </p>
                         <Stepper
                           tone="light"
                           name={`${p.name} من الأكتر طلبًا`}
@@ -324,7 +326,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                     className={`overflow-hidden rounded-3xl bg-white ${qty > 0 ? "ring-2 ring-petrol" : ""}`}
                   >
                     <div className="relative">
-                      <ProductPhoto product={p} size={400} className="aspect-square w-full" />
+                      <ProductPhoto product={p} className="aspect-square w-full" />
                       <div className="absolute bottom-2 end-2">
                         <Stepper name={p.name} qty={qty} onAdd={() => add(p.id)} onRemove={() => remove(p.id)} />
                       </div>
@@ -345,8 +347,6 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
 
         <p className="mt-8 text-center text-xs leading-relaxed text-muted">
           الحد الأدنى للطلب {MIN_ORDER} ج.م، والتوصيل {DELIVERY_FEE} ج.م لأي أوردر. الدفع كاش عند الاستلام.
-          <br />
-          صور العبوات من Open Food Facts (CC BY-SA)، وباقي الصور من Unsplash.
         </p>
       </main>
 
@@ -404,7 +404,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                       const p = productById[it.productId];
                       return (
                         <li key={p.id} className="flex items-center gap-3 px-3 py-2.5">
-                          <ProductPhoto product={p} size={120} className="size-12 shrink-0 rounded-xl" />
+                          <ProductPhoto product={p} className="size-12 shrink-0 rounded-xl" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-medium">{p.name}</p>
                             <p className="text-sm text-muted tabular-nums">

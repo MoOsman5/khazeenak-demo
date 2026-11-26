@@ -17,6 +17,12 @@ export const categories: Category[] = [
   { id: "paper", name: "ورقيات وأطفال" },
 ];
 
+export type PackShape =
+  | "bag" | "can" | "flatcan" | "bottle" | "carton" | "jar" | "box"
+  | "tissue" | "round" | "tray" | "rolls" | "softpack" | "flatpack";
+
+export type Art = { shape: PackShape; color: string; accent: string; label: string; bg: string };
+
 export type Product = {
   id: string;
   name: string;
@@ -25,56 +31,51 @@ export type Product = {
   cost: number; // سعر الجملة
   cat: string;
   emoji: string;
-  img: string; // رقم الصورة على Unsplash
-  pack?: string; // صورة العبوة من Open Food Facts (CC BY-SA)
+  art: Art; // رسمة العبوة
   weight: number; // قد إيه الصنف مطلوب (لتوليد أوردرات الديمو)
 };
 
 export const products: Product[] = [
-  { id: "sugar", name: "سكر الضحى", img: "1641679103706-fc8542e2a97a", unit: "1 كجم", price: 37, cost: 33.5, cat: "grocery", emoji: "🥄", weight: 10 },
-  { id: "rice", name: "أرز الضحى", img: "1705147289789-6df2593f1b1e", unit: "1 كجم", price: 39, cost: 35, cat: "grocery", emoji: "🍚", weight: 10 },
-  { id: "pasta", name: "مكرونة الملكة", pack: "085/006/915/0143/front_en.3.400.jpg", img: "1598720290281-9f26ae6d6f81", unit: "400 جم", price: 17, cost: 15, cat: "grocery", emoji: "🍝", weight: 9 },
-  { id: "flour", name: "دقيق الضحى", img: "1774793476321-70f77d85a3a7", unit: "1 كجم", price: 26, cost: 23, cat: "grocery", emoji: "🌾", weight: 5 },
-  { id: "lentils", name: "عدس أصفر الضحى", img: "1770617476260-1addeea7c826", unit: "500 جم", price: 42, cost: 37, cat: "grocery", emoji: "🫘", weight: 4 },
-  { id: "beans", name: "فول مدمس حدائق كاليفورنيا", pack: "003/289/403/2126/front_en.14.400.jpg", img: "1612504258838-fbf14fe4437d", unit: "400 جم", price: 19, cost: 16.5, cat: "grocery", emoji: "🥫", weight: 6 },
-  { id: "tuna", name: "تونة صن شاين قطع", img: "1593969430155-d2b315c03c6d", unit: "185 جم", price: 68, cost: 61, cat: "grocery", emoji: "🐟", weight: 6 },
-  { id: "paste", name: "صلصة هاينز", pack: "05737804/front_fr.5.400.jpg", img: "1610135373101-89aeeab8fa50", unit: "320 جم", price: 24, cost: 21, cat: "grocery", emoji: "🍅", weight: 6 },
+  { id: "sugar", name: "سكر الضحى", unit: "1 كجم", price: 37, cost: 33.5, cat: "grocery", emoji: "🥄", weight: 10, art: { shape: "bag", color: "#FFFFFF", accent: "#D8432E", label: "سكر", bg: "#FBF0D9" } },
+  { id: "rice", name: "أرز الضحى", unit: "1 كجم", price: 39, cost: 35, cat: "grocery", emoji: "🍚", weight: 10, art: { shape: "bag", color: "#EAF4EE", accent: "#17804F", label: "أرز", bg: "#FBF0D9" } },
+  { id: "pasta", name: "مكرونة الملكة", unit: "400 جم", price: 17, cost: 15, cat: "grocery", emoji: "🍝", weight: 9, art: { shape: "bag", color: "#F7C948", accent: "#C93A26", label: "مكرونة", bg: "#FBF0D9" } },
+  { id: "flour", name: "دقيق الضحى", unit: "1 كجم", price: 26, cost: 23, cat: "grocery", emoji: "🌾", weight: 5, art: { shape: "bag", color: "#F6EEDD", accent: "#8A5A2B", label: "دقيق", bg: "#FBF0D9" } },
+  { id: "lentils", name: "عدس أصفر الضحى", unit: "500 جم", price: 42, cost: 37, cat: "grocery", emoji: "🫘", weight: 4, art: { shape: "bag", color: "#F28A3C", accent: "#8A3B12", label: "عدس", bg: "#FBF0D9" } },
+  { id: "beans", name: "فول مدمس حدائق كاليفورنيا", unit: "400 جم", price: 19, cost: 16.5, cat: "grocery", emoji: "🥫", weight: 6, art: { shape: "can", color: "#8A5A2B", accent: "#F2B705", label: "فول", bg: "#FBF0D9" } },
+  { id: "tuna", name: "تونة صن شاين قطع", unit: "185 جم", price: 68, cost: 61, cat: "grocery", emoji: "🐟", weight: 6, art: { shape: "flatcan", color: "#1E6FA8", accent: "#F2B705", label: "تونة", bg: "#FBF0D9" } },
+  { id: "paste", name: "صلصة هاينز", unit: "320 جم", price: 24, cost: 21, cat: "grocery", emoji: "🍅", weight: 6, art: { shape: "can", color: "#C93A26", accent: "#17804F", label: "صلصة", bg: "#FBF0D9" } },
 
-  { id: "sunoil", name: "زيت كريستال عباد الشمس", img: "1552592074-ea7a91b851b3", unit: "1 لتر", price: 92, cost: 85, cat: "oils", emoji: "🌻", weight: 9 },
-  { id: "mixoil", name: "زيت سلايت خليط", img: "1720468750623-39e9a09f5067", unit: "800 مل", price: 68, cost: 62, cat: "oils", emoji: "🍳", weight: 5 },
-  { id: "ghee", name: "سمن روابي", img: "1741461544812-9ed4e9dcdd01", unit: "1 كجم", price: 125, cost: 114, cat: "oils", emoji: "🧈", weight: 4 },
+  { id: "sunoil", name: "زيت كريستال عباد الشمس", unit: "1 لتر", price: 92, cost: 85, cat: "oils", emoji: "🌻", weight: 9, art: { shape: "bottle", color: "#F5C542", accent: "#17804F", label: "زيت", bg: "#FCEDC0" } },
+  { id: "mixoil", name: "زيت سلايت خليط", unit: "800 مل", price: 68, cost: 62, cat: "oils", emoji: "🍳", weight: 5, art: { shape: "bottle", color: "#EDAE32", accent: "#C93A26", label: "زيت", bg: "#FCEDC0" } },
+  { id: "ghee", name: "سمن روابي", unit: "1 كجم", price: 125, cost: 114, cat: "oils", emoji: "🧈", weight: 4, art: { shape: "jar", color: "#F6D56B", accent: "#17804F", label: "سمن", bg: "#FCEDC0" } },
 
-  { id: "tea", name: "شاي العروسة", pack: "622/200/230/0337/front_en.3.400.jpg", img: "1606163017137-888c0177b3dd", unit: "250 جم", price: 78, cost: 71, cat: "drinks", emoji: "🍵", weight: 7 },
-  { id: "coffee", name: "نسكافيه كلاسيك", pack: "89009758/front_en.3.400.jpg", img: "1648127688766-16c834c5f558", unit: "100 جم", price: 165, cost: 150, cat: "drinks", emoji: "☕", weight: 2 },
-  { id: "water", name: "مياه نستله بيور لايف", pack: "885/012/400/3850/front_en.5.400.jpg", img: "1536939459926-301728717817", unit: "6 × 1.5 لتر", price: 54, cost: 47, cat: "drinks", emoji: "💧", weight: 10 },
-  { id: "juice", name: "عصير جهينة بيور", img: "1600271886742-f049cd451bba", unit: "1 لتر", price: 38, cost: 33, cat: "drinks", emoji: "🧃", weight: 5 },
-  { id: "soda", name: "بيبسي", pack: "406/080/000/1740/front_en.88.400.jpg", img: "1700328971815-854758899c06", unit: "2.25 لتر", price: 37, cost: 33, cat: "drinks", emoji: "🥤", weight: 4 },
+  { id: "tea", name: "شاي العروسة", unit: "250 جم", price: 78, cost: 71, cat: "drinks", emoji: "🍵", weight: 7, art: { shape: "box", color: "#C93A26", accent: "#F2B705", label: "شاي", bg: "#DCEFF7" } },
+  { id: "coffee", name: "نسكافيه كلاسيك", unit: "100 جم", price: 165, cost: 150, cat: "drinks", emoji: "☕", weight: 2, art: { shape: "jar", color: "#4A2C1A", accent: "#C93A26", label: "قهوة", bg: "#DCEFF7" } },
+  { id: "water", name: "مياه نستله بيور لايف", unit: "6 × 1.5 لتر", price: 54, cost: 47, cat: "drinks", emoji: "💧", weight: 10, art: { shape: "bottle", color: "#BFE3F5", accent: "#1E6FA8", label: "مياه", bg: "#DCEFF7" } },
+  { id: "juice", name: "عصير جهينة بيور", unit: "1 لتر", price: 38, cost: 33, cat: "drinks", emoji: "🧃", weight: 5, art: { shape: "carton", color: "#F28A3C", accent: "#17804F", label: "عصير", bg: "#DCEFF7" } },
+  { id: "soda", name: "بيبسي", unit: "2.25 لتر", price: 37, cost: 33, cat: "drinks", emoji: "🥤", weight: 4, art: { shape: "bottle", color: "#2B1B14", accent: "#C93A26", label: "كولا", bg: "#DCEFF7" } },
 
-  { id: "milk", name: "لبن جهينة كامل الدسم", pack: "622/300/035/0003/front_en.6.400.jpg", img: "1634141510639-d691d86f47be", unit: "1 لتر", price: 48, cost: 43.5, cat: "dairy", emoji: "🥛", weight: 8 },
-  { id: "eggs", name: "بيض أبيض", img: "1506976785307-8732e854ad03", unit: "طبق 30", price: 165, cost: 152, cat: "dairy", emoji: "🥚", weight: 7 },
-  { id: "feta", name: "جبنة دومتي بيضاء", pack: "622/300/075/2982/front_en.8.400.jpg", img: "1661349008073-136bed6e6788", unit: "500 جم", price: 62, cost: 55, cat: "dairy", emoji: "🧀", weight: 6 },
-  { id: "triangles", name: "جبنة لافاش كيري مثلثات", pack: "307/378/115/8830/front_fr.5.400.jpg", img: "1683314573424-b0da0c795a07", unit: "24 قطعة", price: 95, cost: 86, cat: "dairy", emoji: "🧀", weight: 3 },
+  { id: "milk", name: "لبن جهينة كامل الدسم", unit: "1 لتر", price: 48, cost: 43.5, cat: "dairy", emoji: "🥛", weight: 8, art: { shape: "carton", color: "#FFFFFF", accent: "#1E6FA8", label: "لبن", bg: "#E4EFFA" } },
+  { id: "eggs", name: "بيض أبيض", unit: "طبق 30", price: 165, cost: 152, cat: "dairy", emoji: "🥚", weight: 7, art: { shape: "tray", color: "#C9A77A", accent: "#C9A77A", label: "بيض", bg: "#E4EFFA" } },
+  { id: "feta", name: "جبنة دومتي بيضاء", unit: "500 جم", price: 62, cost: 55, cat: "dairy", emoji: "🧀", weight: 6, art: { shape: "box", color: "#FFFFFF", accent: "#1E6FA8", label: "جبنة", bg: "#E4EFFA" } },
+  { id: "triangles", name: "جبنة لافاش كيري مثلثات", unit: "24 قطعة", price: 95, cost: 86, cat: "dairy", emoji: "🧀", weight: 3, art: { shape: "round", color: "#D8432E", accent: "#F2B705", label: "جبنة", bg: "#E4EFFA" } },
 
-  { id: "powder", name: "برسيل أوتوماتيك", img: "1593095948071-474c5cc2989d", unit: "4 كجم", price: 315, cost: 285, cat: "cleaning", emoji: "🧺", weight: 4 },
-  { id: "dish", name: "بريل سائل أطباق", img: "1582020711621-ab153a0f3631", unit: "1 لتر", price: 58, cost: 50, cat: "cleaning", emoji: "🧽", weight: 6 },
-  { id: "bleach", name: "كلوركس", img: "1563453392212-326f5e854473", unit: "1 لتر", price: 28, cost: 24, cat: "cleaning", emoji: "🧴", weight: 5 },
-  { id: "floor", name: "ديتول منظف أرضيات", img: "1758273238415-01ec03d9ef27", unit: "1 لتر", price: 55, cost: 47, cat: "cleaning", emoji: "🪣", weight: 4 },
+  { id: "powder", name: "برسيل أوتوماتيك", unit: "4 كجم", price: 315, cost: 285, cat: "cleaning", emoji: "🧺", weight: 4, art: { shape: "softpack", color: "#1E6FA8", accent: "#F2B705", label: "مسحوق", bg: "#E2F3EA" } },
+  { id: "dish", name: "بريل سائل أطباق", unit: "1 لتر", price: 58, cost: 50, cat: "cleaning", emoji: "🧽", weight: 6, art: { shape: "bottle", color: "#7BC043", accent: "#FFFFFF", label: "أطباق", bg: "#E2F3EA" } },
+  { id: "bleach", name: "كلوركس", unit: "1 لتر", price: 28, cost: 24, cat: "cleaning", emoji: "🧴", weight: 5, art: { shape: "bottle", color: "#F4F8FB", accent: "#1E6FA8", label: "كلور", bg: "#E2F3EA" } },
+  { id: "floor", name: "ديتول منظف أرضيات", unit: "1 لتر", price: 55, cost: 47, cat: "cleaning", emoji: "🪣", weight: 4, art: { shape: "bottle", color: "#8E5BD0", accent: "#F2B705", label: "أرضيات", bg: "#E2F3EA" } },
 
-  { id: "tissues", name: "مناديل فاين", img: "1609840112990-4265448268d1", unit: "500 منديل", price: 42, cost: 36, cat: "paper", emoji: "🤧", weight: 7 },
-  { id: "toilet", name: "ورق تواليت فاين", img: "1631524254770-03abe3f42a0d", unit: "6 رول", price: 78, cost: 69, cat: "paper", emoji: "🧻", weight: 5 },
-  { id: "diapers", name: "بامبرز مقاس 4", img: "1695998575483-b215c8b2f619", unit: "58 قطعة", price: 465, cost: 430, cat: "paper", emoji: "👶", weight: 2 },
-  { id: "wipes", name: "مناديل مبللة جونسون", img: "1633265484557-e298493cb162", unit: "72 منديل", price: 45, cost: 38, cat: "paper", emoji: "🧼", weight: 3 },
+  { id: "tissues", name: "مناديل فاين", unit: "500 منديل", price: 42, cost: 36, cat: "paper", emoji: "🤧", weight: 7, art: { shape: "tissue", color: "#6FC3DF", accent: "#1E6FA8", label: "مناديل", bg: "#F3E5F4" } },
+  { id: "toilet", name: "ورق تواليت فاين", unit: "6 رول", price: 78, cost: 69, cat: "paper", emoji: "🧻", weight: 5, art: { shape: "rolls", color: "#6FC3DF", accent: "#1E6FA8", label: "تواليت", bg: "#F3E5F4" } },
+  { id: "diapers", name: "بامبرز مقاس 4", unit: "58 قطعة", price: 465, cost: 430, cat: "paper", emoji: "👶", weight: 2, art: { shape: "softpack", color: "#36B3A8", accent: "#FFFFFF", label: "حفاضات", bg: "#F3E5F4" } },
+  { id: "wipes", name: "مناديل مبللة جونسون", unit: "72 منديل", price: 45, cost: 38, cat: "paper", emoji: "🧼", weight: 3, art: { shape: "flatpack", color: "#F27BA5", accent: "#C2386B", label: "مبللة", bg: "#F3E5F4" } },
 ];
 
-// الصور من Unsplash (ترخيص مجاني). بدّلها بصور المنتجات الفعلية لما تتصور.
+// صورة الهيرو من Unsplash (ترخيص مجاني).
 export const HERO_IMG = "1588964895597-cfccd6e2dbf9";
 
 export function photo(id: string, width: number, height: number): string {
   return `https://images.unsplash.com/photo-${id}?w=${width}&h=${height}&fit=crop&auto=format&q=70`;
-}
-
-export function packPhoto(path: string): string {
-  return `https://images.openfoodfacts.org/images/products/${path}`;
 }
 
 export const featuredIds = ["rice", "sunoil", "eggs", "water", "milk", "tea"];
