@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import ProductPhoto from "@/components/ProductPhoto";
 import {
   categories,
   DELIVERY_FEE,
   egp,
+  featuredIds,
+  HERO_IMG,
   MIN_ORDER,
+  photo,
   productById,
   products,
   subLabels,
@@ -33,25 +37,28 @@ function Stepper({
   qty,
   onAdd,
   onRemove,
+  tone = "dark",
 }: {
   name: string;
   qty: number;
   onAdd: () => void;
   onRemove: () => void;
+  tone?: "dark" | "light";
 }) {
+  const color = tone === "light" ? "bg-marigold text-ink" : "bg-petrol text-white";
   if (qty === 0) {
     return (
       <button
         onClick={onAdd}
         aria-label={`ضيف ${name}`}
-        className="grid size-11 shrink-0 place-items-center rounded-full bg-petrol text-2xl leading-none text-white active:bg-petrol-2"
+        className={`grid size-11 shrink-0 place-items-center rounded-full text-2xl leading-none shadow-lg shadow-ink/20 transition-transform active:scale-90 ${color}`}
       >
         +
       </button>
     );
   }
   return (
-    <div className="flex shrink-0 items-center rounded-full bg-petrol text-white">
+    <div className={`flex shrink-0 items-center rounded-full shadow-lg shadow-ink/20 ${color}`}>
       <button onClick={onAdd} aria-label={`زوّد ${name}`} className="grid size-11 place-items-center text-2xl leading-none">
         +
       </button>
@@ -184,40 +191,61 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
 
   return (
     <div className={count > 0 ? "pb-40" : "pb-10"}>
-      <header className="bg-petrol text-white">
-        <div className="mx-auto max-w-xl px-4 pb-6 pt-5">
+      <header className="relative isolate overflow-hidden bg-petrol text-white">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={photo(HERO_IMG, 1600, 900)}
+          alt=""
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+          }}
+          className="absolute inset-0 -z-10 size-full object-cover"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-petrol via-petrol/75 to-petrol/30" aria-hidden />
+        <div className="mx-auto max-w-6xl px-4 pb-24 pt-5 sm:px-6 md:pb-28 md:pt-8">
           <p className="font-display text-xl font-bold">خزينك</p>
-
-          <p className="mt-6 text-sm text-white/70">التوصيل الجاي</p>
-          <h1 className="font-display text-[2rem] font-extrabold leading-tight">
-            {cycle?.delivery ?? "السبت"}
+          <h1 className="mt-16 font-display text-[1.9rem] font-extrabold leading-[1.3] min-[380px]:text-[2.15rem] md:mt-24 md:text-5xl md:leading-[1.25] xl:text-6xl xl:leading-[1.2]">
+            خزين البيت كله
+            <br />
+            يوصلك {cycle?.delivery ?? "السبت"}
           </h1>
-
-          <ol className="mt-5 grid grid-cols-3 gap-3">
-            {steps.map((step, i) => (
-              <li key={step.title} className="relative pt-5">
-                <span className="absolute inset-x-0 top-[5px] h-px bg-white/25" aria-hidden />
-                <span
-                  className={`absolute start-0 top-0 size-[11px] rounded-full ${
-                    i === 0 ? "bg-marigold" : "border border-white/50 bg-petrol"
-                  }`}
-                  aria-hidden
-                />
-                <span className="block text-sm font-semibold">{step.title}</span>
-                <span className="block text-xs leading-relaxed text-white/70">{step.detail}</span>
-              </li>
-            ))}
-          </ol>
-
-          <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-marigold px-3.5 py-1.5 text-sm font-semibold text-ink">
-            <span>باقي على قفل الطلب</span>
-            <span className="tabular-nums">{cycle?.left ?? "…"}</span>
+          <p className="mt-3 max-w-[32ch] leading-relaxed text-white/85 md:mt-4 md:text-lg">
+            من غير مشوار ولا شيل. اطلب دلوقتي وادفع كاش لما يوصلك.
           </p>
         </div>
       </header>
 
-      <div className="sticky top-0 z-10 border-b border-line bg-mist">
-        <div className="mx-auto max-w-xl px-4 pb-2 pt-3">
+      <section className="relative z-[1] mx-auto -mt-16 max-w-6xl px-4 sm:px-6">
+        <div className="rounded-3xl bg-white p-4 shadow-[0_22px_44px_-22px_rgba(14,59,67,0.55)] md:flex md:items-center md:gap-8 md:p-6">
+          <div className="flex items-center justify-between gap-3 md:w-80 md:shrink-0">
+            <div>
+              <p className="text-sm text-muted">باقي على قفل الطلب</p>
+              <p className="font-display text-xl font-extrabold tabular-nums">{cycle?.left ?? "…"}</p>
+            </div>
+            <span className="shrink-0 whitespace-nowrap rounded-full bg-marigold px-3.5 py-1.5 text-sm font-semibold">
+              التوصيل {DELIVERY_FEE} ج.م
+            </span>
+          </div>
+          <ol className="mt-4 grid grid-cols-3 gap-3 border-t border-line pt-4 md:mt-0 md:flex-1 md:border-s md:border-t-0 md:ps-8 md:pt-0">
+            {steps.map((step, i) => (
+              <li key={step.title} className="relative pt-5">
+                <span className="absolute inset-x-0 top-[5px] h-px bg-line" aria-hidden />
+                <span
+                  className={`absolute start-0 top-0 size-[11px] rounded-full ${
+                    i === 0 ? "bg-marigold" : "border-2 border-petrol/40 bg-white"
+                  }`}
+                  aria-hidden
+                />
+                <span className="block text-sm font-semibold">{step.title}</span>
+                <span className="block text-xs leading-relaxed text-muted">{step.detail}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <div className="sticky top-0 z-10 mt-4 border-b border-line bg-mist">
+        <div className="mx-auto max-w-6xl px-4 pb-2 pt-3 sm:px-6">
           <label className="sr-only" htmlFor="search">
             دوّر على صنف
           </label>
@@ -227,9 +255,9 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="دوّر على صنف: سكر، زيت، مناديل"
-            className="w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-base placeholder:text-muted/70"
+            className="w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-base placeholder:text-muted/70 md:max-w-md"
           />
-          <div className="no-scrollbar -mx-4 mt-2.5 flex gap-2 overflow-x-auto px-4 pb-1">
+          <div className="no-scrollbar -mx-4 mt-2.5 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6">
             {[{ id: "all", name: "الكل" }, ...categories].map((c) => (
               <button
                 key={c.id}
@@ -246,33 +274,71 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
         </div>
       </div>
 
-      <main className="mx-auto max-w-xl px-4">
+      <main className="mx-auto max-w-6xl px-4 sm:px-6">
         {groups.length === 0 && (
           <p className="py-16 text-center text-muted">مفيش صنف بالاسم ده. جرّب كلمة تانية.</p>
+        )}
+
+        {cat === "all" && !query.trim() && (
+          <section className="mt-6">
+            <h2 className="font-display text-lg font-bold">الأكتر طلبًا</h2>
+            <div className="no-scrollbar -mx-4 mt-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 lg:gap-4">
+              {featuredIds.map((id) => {
+                const p = productById[id];
+                return (
+                  <article
+                    key={id}
+                    className="relative w-[62%] max-w-60 shrink-0 snap-start overflow-hidden rounded-3xl bg-ink text-white sm:w-56 lg:w-60"
+                  >
+                    <ProductPhoto product={p} size={520} className="aspect-[4/5] w-full" />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink via-ink/75 to-transparent p-3 pt-12">
+                      <p className="font-semibold">{p.name}</p>
+                      <p className="text-sm text-white/75">{p.unit}</p>
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <p className="font-display text-lg font-extrabold tabular-nums">{egp(p.price)} ج.م</p>
+                        <Stepper
+                          tone="light"
+                          name={`${p.name} من الأكتر طلبًا`}
+                          qty={cart[id] ?? 0}
+                          onAdd={() => add(id)}
+                          onRemove={() => remove(id)}
+                        />
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
         )}
 
         {groups.map((group) => (
           <section key={group.category.id} className="mt-6">
             <h2 className="font-display text-lg font-bold">{group.category.name}</h2>
-            <ul className="mt-2 divide-y divide-line overflow-hidden rounded-2xl bg-white">
-              {group.items.map((p) => (
-                <li key={p.id} className="flex items-center gap-3 px-3 py-3">
-                  <span
-                    className="grid size-14 shrink-0 place-items-center rounded-xl bg-mist text-3xl"
-                    aria-hidden
+            <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+              {group.items.map((p) => {
+                const qty = cart[p.id] ?? 0;
+                return (
+                  <li
+                    key={p.id}
+                    className={`overflow-hidden rounded-3xl bg-white ${qty > 0 ? "ring-2 ring-petrol" : ""}`}
                   >
-                    {p.emoji}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">{p.name}</p>
-                    <p className="text-sm text-muted">{p.unit}</p>
-                    <p className="mt-0.5 font-display font-bold tabular-nums">
-                      {egp(p.price)} <span className="text-xs font-normal text-muted">ج.م</span>
-                    </p>
-                  </div>
-                  <Stepper name={p.name} qty={cart[p.id] ?? 0} onAdd={() => add(p.id)} onRemove={() => remove(p.id)} />
-                </li>
-              ))}
+                    <div className="relative">
+                      <ProductPhoto product={p} size={400} className="aspect-square w-full" />
+                      <div className="absolute bottom-2 end-2">
+                        <Stepper name={p.name} qty={qty} onAdd={() => add(p.id)} onRemove={() => remove(p.id)} />
+                      </div>
+                    </div>
+                    <div className="px-3 pb-3 pt-2.5">
+                      <p className="truncate font-medium">{p.name}</p>
+                      <p className="text-sm text-muted">{p.unit}</p>
+                      <p className="mt-1 font-display text-lg font-extrabold tabular-nums">
+                        {egp(p.price)} <span className="text-xs font-normal text-muted">ج.م</span>
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         ))}
@@ -283,7 +349,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
       </main>
 
       {count > 0 && sheet === "closed" && (
-        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white px-4 pb-4 pt-3">
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white px-4 pb-4 pt-3 md:inset-x-auto md:bottom-6 md:end-6 md:w-96 md:rounded-3xl md:border md:shadow-2xl md:shadow-ink/25">
           <div className="mx-auto max-w-xl">
             {missing > 0 ? (
               <div className="mb-2.5">
@@ -316,7 +382,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
 
       {sheet !== "closed" && (
         <div className="fixed inset-0 z-30 bg-ink/55" role="dialog" aria-modal="true" aria-label="تأكيد الطلب">
-          <div className="sheet-up absolute inset-x-0 bottom-0 top-10 mx-auto flex max-w-xl flex-col overflow-hidden rounded-t-3xl bg-mist">
+          <div className="sheet-up absolute inset-x-0 bottom-0 top-10 mx-auto flex max-w-xl flex-col overflow-hidden rounded-t-3xl bg-mist md:bottom-6 md:top-6 md:rounded-3xl">
             {sheet === "checkout" && (
               <>
                 <div className="flex items-center justify-between border-b border-line bg-white px-4 py-3.5">
@@ -336,6 +402,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                       const p = productById[it.productId];
                       return (
                         <li key={p.id} className="flex items-center gap-3 px-3 py-2.5">
+                          <ProductPhoto product={p} size={120} className="size-12 shrink-0 rounded-xl" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-medium">{p.name}</p>
                             <p className="text-sm text-muted tabular-nums">

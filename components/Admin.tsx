@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import ProductPhoto from "@/components/ProductPhoto";
 import {
   categories,
   DELIVERY_FEE,
@@ -79,7 +80,7 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
   return (
     <div className="pb-16">
       <header className="border-b border-line bg-white">
-        <div className="mx-auto max-w-5xl px-4 pt-5">
+        <div className="mx-auto max-w-6xl px-4 pt-5 sm:px-6">
           <p className="text-sm text-muted">لوحة التشغيل</p>
           <h1 className="font-display text-2xl font-extrabold">رحلة {cycle?.delivery ?? "السبت"}</h1>
           <p className="mt-1 text-sm text-muted tabular-nums">
@@ -104,7 +105,7 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4">
+      <main className="mx-auto max-w-6xl px-4 sm:px-6">
         {tab === "summary" && (
           <div className="mt-5 grid gap-5 md:grid-cols-5">
             <section className="overflow-hidden rounded-2xl bg-white md:col-span-3">
@@ -205,6 +206,7 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
                               onChange={() => toggleBought(line.product.id)}
                               className="size-5 shrink-0 accent-leaf"
                             />
+                            <ProductPhoto product={line.product} size={120} className="size-12 shrink-0 rounded-xl" />
                             <span className={`min-w-0 flex-1 ${done ? "text-muted line-through" : ""}`}>
                               <span className="block truncate font-medium">{line.product.name}</span>
                               <span className="block text-sm text-muted">{line.product.unit}</span>

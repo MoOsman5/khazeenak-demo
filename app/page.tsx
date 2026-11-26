@@ -35,8 +35,8 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <div className="bg-ink text-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2">
-          <span className="text-xs text-white/70">نسخة تجريبية</span>
+        <div className="mx-auto flex max-w-6xl items-center justify-center gap-3 px-4 py-2 min-[380px]:justify-between sm:px-6">
+          <span className="hidden text-xs text-white/70 min-[380px]:inline">نسخة تجريبية</span>
           <div className="flex rounded-full bg-white/10 p-0.5 text-sm" role="tablist" aria-label="اختار الواجهة">
             {(
               [
