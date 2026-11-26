@@ -206,7 +206,7 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
                               onChange={() => toggleBought(line.product.id)}
                               className="size-5 shrink-0 accent-leaf"
                             />
-                            <ProductPhoto product={line.product} className="size-12 shrink-0 rounded-xl" />
+                            <ProductPhoto product={line.product} size={120} className="size-12 shrink-0 rounded-xl" />
                             <span className={`min-w-0 flex-1 ${done ? "text-muted line-through" : ""}`}>
                               <span className="block truncate font-medium">{line.product.name}</span>
                               <span className="block text-sm text-muted">{line.product.unit}</span>

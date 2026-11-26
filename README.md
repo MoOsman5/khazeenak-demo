@@ -22,4 +22,4 @@ npm run dev
 
 نسخة ثابتة للرفع على أي استضافة: `STATIC_EXPORT=1 npm run build` والناتج في `out`.
 
-صور الأصناف رسومات SVG أصلية في `components/PackArt.tsx` (الشكل واللون لكل صنف في `lib/data.ts`). صورة الهيرو من Unsplash.
+صور الأصناف صور عامة من Unsplash (ترخيص مجاني). لصور منتجاتك إنت شوف `public/products/README.md`. لو صورة ماحمّلتش بتظهر رسمة احتياطية من `components/PackArt.tsx`.

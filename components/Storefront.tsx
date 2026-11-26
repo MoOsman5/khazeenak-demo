@@ -404,7 +404,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                       const p = productById[it.productId];
                       return (
                         <li key={p.id} className="flex items-center gap-3 px-3 py-2.5">
-                          <ProductPhoto product={p} className="size-12 shrink-0 rounded-xl" />
+                          <ProductPhoto product={p} size={120} className="size-12 shrink-0 rounded-xl" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-medium">{p.name}</p>
                             <p className="text-sm text-muted tabular-nums">
