@@ -254,7 +254,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="دوّر على صنف: سكر، زيت، مناديل"
+            placeholder="دوّر على صنف أو ماركة: سكر، جهينة، فاين"
             className="w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-base placeholder:text-muted/70 md:max-w-md"
           />
           <div className="no-scrollbar -mx-4 mt-2.5 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6">
@@ -330,7 +330,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                       </div>
                     </div>
                     <div className="px-3 pb-3 pt-2.5">
-                      <p className="truncate font-medium">{p.name}</p>
+                      <p className="line-clamp-2 min-h-[2.75em] font-medium leading-snug">{p.name}</p>
                       <p className="text-sm text-muted">{p.unit}</p>
                       <p className="mt-1 font-display text-lg font-extrabold tabular-nums">
                         {egp(p.price)} <span className="text-xs font-normal text-muted">ج.م</span>
