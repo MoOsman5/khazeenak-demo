@@ -5,6 +5,7 @@ import {
   categories,
   DELIVERY_FEE,
   egp,
+  formatAddress,
   itemsTotal,
   PACKING_PER_ORDER,
   productById,
@@ -56,7 +57,7 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
   const [delivered, setDelivered] = useState<Set<number>>(new Set());
   const [openOrder, setOpenOrder] = useState<number | null>(null);
 
-  const s = useMemo(() => summarize(orders), [orders]);
+  const s = useMemo(() => summarize(orders, delivered), [orders, delivered]);
   const maxZone = Math.max(...s.byZone.map((z) => z.count), 1);
 
   const toggleBought = (id: string) =>
@@ -82,7 +83,7 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
           <p className="text-sm text-muted">لوحة التشغيل</p>
           <h1 className="font-display text-2xl font-extrabold">رحلة {cycle?.delivery ?? "السبت"}</h1>
           <p className="mt-1 text-sm text-muted tabular-nums">
-            {s.count} أوردر، اتدفع منهم {s.paidCount}
+            {s.count} أوردر، اتسلّم منهم {s.deliveredCount}
           </p>
 
           <div className="no-scrollbar -mx-4 mt-4 flex gap-1 overflow-x-auto px-4" role="tablist">
@@ -132,12 +133,12 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
                 <h2 className="font-display font-bold">التحصيل</h2>
                 <dl className="mt-2 divide-y divide-line text-[15px]">
                   <div className="flex justify-between py-2.5">
-                    <dt className="text-muted">اتحصّل</dt>
+                    <dt className="text-muted">اتحصّل كاش ({s.deliveredCount} أوردر)</dt>
                     <dd className="tabular-nums text-leaf">{egp(s.collected)} ج.م</dd>
                   </div>
                   <div className="flex justify-between py-2.5">
-                    <dt className="text-muted">مستني تحويل ({s.count - s.paidCount} أوردر)</dt>
-                    <dd className="tabular-nums text-tomato">{egp(s.due)} ج.م</dd>
+                    <dt className="text-muted">لسه هيتحصّل ({s.count - s.deliveredCount} أوردر)</dt>
+                    <dd className="tabular-nums">{egp(s.due)} ج.م</dd>
                   </div>
                   <div className="flex justify-between py-2.5">
                     <dt className="text-muted">متوسط الأوردر</dt>
@@ -259,15 +260,15 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
                                 )}
                               </span>
                               <span className="block text-sm text-muted tabular-nums">
-                                #{o.id}، {o.address}
+                                #{o.id}، {formatAddress(o)}
                               </span>
                             </span>
                             <span className="shrink-0 text-end">
                               <span className="block font-display font-bold tabular-nums">
                                 {egp(itemsTotal(o.items) + DELIVERY_FEE)} ج.م
                               </span>
-                              <span className={`block text-sm ${o.paid ? "text-leaf" : "text-tomato"}`}>
-                                {isDone ? "اتسلّم" : o.paid ? "مدفوع" : "مستني تحويل"}
+                              <span className={`block text-sm ${isDone ? "text-leaf" : "text-muted"}`}>
+                                {isDone ? "اتسلّم واتحصّل" : "كاش عند الاستلام"}
                               </span>
                             </span>
                           </button>
@@ -287,6 +288,14 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
                                   );
                                 })}
                               </ul>
+                              {o.addressNote && (
+                                <p className="mt-3 text-muted">
+                                  وصف العنوان: <span className="text-ink">{o.addressNote}</span>
+                                </p>
+                              )}
+                              {o.notes && (
+                                <p className="mt-3 rounded-lg bg-marigold/25 px-2.5 py-2 text-ink">{o.notes}</p>
+                              )}
                               <p className="mt-3 text-muted">
                                 لو صنف ناقص: <span className="text-ink">{subLabels[o.sub]}</span>
                               </p>
@@ -299,7 +308,7 @@ export default function Admin({ cycle, orders }: { cycle: Cycle | null; orders: 
                                   isDone ? "border border-line bg-white" : "bg-petrol text-white"
                                 }`}
                               >
-                                {isDone ? "رجّعه لسه متسلّمش" : "علّم إنه اتسلّم"}
+                                {isDone ? "رجّعه لسه متسلّمش" : "علّم إنه اتسلّم واتحصّل"}
                               </button>
                             </div>
                           )}

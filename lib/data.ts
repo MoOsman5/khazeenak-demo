@@ -69,7 +69,8 @@ export const productById: Record<string, Product> = Object.fromEntries(
 );
 
 // ترتيب المناطق = ترتيب الوقفات في خط السير
-export const zones = ["الحي الأول", "الحي الثاني", "الحي الثالث", "الحي الرابع"];
+export const zones = ["منطقة 645 عمارة", "منطقة 309 عمارة"];
+const zoneBuildings = [645, 309];
 
 export type SubPref = "alt" | "credit" | "call";
 
@@ -79,8 +80,6 @@ export const subLabels: Record<SubPref, string> = {
   call: "كلمني الأول",
 };
 
-export type PayMethod = "instapay" | "wallet";
-
 export type OrderItem = { productId: string; qty: number };
 
 export type Order = {
@@ -88,12 +87,18 @@ export type Order = {
   customer: string;
   phone: string;
   zone: string;
-  address: string;
+  building: string;
+  apartment: string;
+  addressNote?: string; // وصف العنوان (اختياري)
+  notes?: string; // ملاحظات للمندوب (اختياري)
   items: OrderItem[];
-  paid: boolean;
   sub: SubPref;
   isNew?: boolean;
 };
+
+export function formatAddress(o: Pick<Order, "building" | "apartment">): string {
+  return `عمارة ${o.building}، شقة ${o.apartment}`;
+}
 
 export function itemsTotal(items: OrderItem[]): number {
   return items.reduce((s, it) => s + productById[it.productId].price * it.qty, 0);
@@ -129,7 +134,12 @@ const lastNames = [
   "نبيل", "وليد", "عبد الله", "سعيد", "أشرف", "فؤاد", "حمدي", "علي", "يوسف", "رمضان", "مدحت", "عزت",
 ];
 
-const zoneShare = [0.34, 0.27, 0.22, 0.17];
+const zoneShare = [0.67, 0.33];
+const demoNotes = [
+  "رن قبل ما توصل بعشر دقايق",
+  "سيب الأوردر مع البواب لو مش موجود",
+  "التسليم بعد 4 العصر",
+];
 const SEED_ORDER_COUNT = 41;
 const FIRST_ORDER_ID = 1041;
 
@@ -168,14 +178,16 @@ function buildSeedOrders(): Order[] {
     }
 
     const s = rnd();
+    const n = rnd();
     orders.push({
       id: FIRST_ORDER_ID + i,
       customer: `${firstNames[Math.floor(rnd() * firstNames.length)]} ${lastNames[Math.floor(rnd() * lastNames.length)]}`,
       phone: "010" + String(10000000 + Math.floor(rnd() * 89999999)),
       zone: zones[zoneIndex],
-      address: `عمارة ${1 + Math.floor(rnd() * 60)}، شقة ${1 + Math.floor(rnd() * 16)}`,
+      building: String(1 + Math.floor(rnd() * zoneBuildings[zoneIndex])),
+      apartment: String(1 + Math.floor(rnd() * 12)),
+      notes: n < 0.24 ? demoNotes[Math.floor(n / 0.08)] : undefined,
       items: [...picked].map(([productId, qty]) => ({ productId, qty })),
-      paid: rnd() < 0.83,
       sub: s < 0.55 ? "alt" : s < 0.85 ? "credit" : "call",
     });
   }
@@ -189,7 +201,8 @@ export const NEXT_ORDER_ID = FIRST_ORDER_ID + SEED_ORDER_COUNT;
 
 export type PurchaseLine = { product: Product; qty: number; cost: number };
 
-export function summarize(orders: Order[]) {
+// الدفع كاش عند الاستلام: اللي اتسلّم هو اللي اتحصّل.
+export function summarize(orders: Order[], delivered: Set<number> = new Set()) {
   const sales = orders.reduce((s, o) => s + itemsTotal(o.items), 0);
   const goodsCost = orders.reduce((s, o) => s + itemsCost(o.items), 0);
   const deliveryFees = orders.length * DELIVERY_FEE;
@@ -198,8 +211,8 @@ export function summarize(orders: Order[]) {
   const margin = sales - goodsCost;
   const net = margin + deliveryFees - fuel - packing;
 
-  const paidOrders = orders.filter((o) => o.paid);
-  const collected = paidOrders.reduce((s, o) => s + itemsTotal(o.items) + DELIVERY_FEE, 0);
+  const deliveredOrders = orders.filter((o) => delivered.has(o.id));
+  const collected = deliveredOrders.reduce((s, o) => s + itemsTotal(o.items) + DELIVERY_FEE, 0);
   const due = sales + deliveryFees - collected;
 
   const byZone = zones.map((zone) => {
@@ -227,7 +240,7 @@ export function summarize(orders: Order[]) {
     net,
     perPartner: net / PARTNERS,
     avgOrder: orders.length ? sales / orders.length : 0,
-    paidCount: paidOrders.length,
+    deliveredCount: deliveredOrders.length,
     collected,
     due,
     byZone,

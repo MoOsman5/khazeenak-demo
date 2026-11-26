@@ -11,7 +11,6 @@ import {
   subLabels,
   zones,
   type Order,
-  type PayMethod,
   type SubPref,
 } from "@/lib/data";
 import type { Cycle } from "@/lib/useCycle";
@@ -28,11 +27,6 @@ const steps = [
   { title: "بنشتري", detail: "السبت الصبح" },
   { title: "يوصلك", detail: "السبت من 2 الضهر" },
 ];
-
-const payLabels: Record<PayMethod, string> = {
-  instapay: "إنستاباي",
-  wallet: "محفظة موبايل",
-};
 
 function Stepper({
   name,
@@ -100,14 +94,16 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
   const [cat, setCat] = useState("all");
   const [query, setQuery] = useState("");
   const [sheet, setSheet] = useState<"closed" | "checkout" | "done">("closed");
-  const [placed, setPlaced] = useState<{ order: Order; total: number; pay: PayMethod } | null>(null);
+  const [placed, setPlaced] = useState<{ order: Order; total: number } | null>(null);
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [zone, setZone] = useState("");
-  const [address, setAddress] = useState("");
+  const [building, setBuilding] = useState("");
+  const [apartment, setApartment] = useState("");
+  const [addressNote, setAddressNote] = useState("");
+  const [notes, setNotes] = useState("");
   const [sub, setSub] = useState<SubPref>("alt");
-  const [pay, setPay] = useState<PayMethod>("instapay");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -159,7 +155,8 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
     if (name.trim().length < 3) found.name = "اكتب اسمك عشان المندوب يعرفك.";
     if (!/^01[0125]\d{8}$/.test(phone.trim())) found.phone = "رقم الموبايل لازم يبقى 11 رقم ويبدأ بـ 01.";
     if (!zone) found.zone = "اختار المنطقة.";
-    if (address.trim().length < 3) found.address = "اكتب رقم العمارة والشقة.";
+    if (!/^\d{1,4}$/.test(building.trim())) found.building = "اكتب رقم العمارة.";
+    if (!apartment.trim()) found.apartment = "اكتب رقم الشقة.";
     setErrors(found);
     if (Object.keys(found).length > 0 || missing > 0) return;
 
@@ -168,14 +165,16 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
       customer: name.trim(),
       phone: phone.trim(),
       zone,
-      address: address.trim(),
+      building: building.trim(),
+      apartment: apartment.trim(),
+      addressNote: addressNote.trim() || undefined,
+      notes: notes.trim() || undefined,
       items: cartItems,
-      paid: false,
       sub,
       isNew: true,
     };
     onPlaced(order);
-    setPlaced({ order, total, pay });
+    setPlaced({ order, total });
     setCart({});
     setSheet("done");
   };
@@ -279,7 +278,7 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
         ))}
 
         <p className="mt-8 text-center text-xs leading-relaxed text-muted">
-          الحد الأدنى للطلب {MIN_ORDER} ج.م، والتوصيل {DELIVERY_FEE} ج.م لأي أوردر.
+          الحد الأدنى للطلب {MIN_ORDER} ج.م، والتوصيل {DELIVERY_FEE} ج.م لأي أوردر. الدفع كاش عند الاستلام.
         </p>
       </main>
 
@@ -399,20 +398,58 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                       {errors.zone && <p className="mt-1 text-sm text-tomato">{errors.zone}</p>}
                     </div>
 
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="block text-sm font-medium">
+                        رقم العمارة
+                        <input
+                          value={building}
+                          onChange={(e) => {
+                            setBuilding(e.target.value.replace(/[^\d]/g, "").slice(0, 4));
+                            clearError("building");
+                          }}
+                          inputMode="numeric"
+                          className={`${inputClass} tabular-nums`}
+                        />
+                        {errors.building && (
+                          <span className="mt-1 block text-sm font-normal text-tomato">{errors.building}</span>
+                        )}
+                      </label>
+                      <label className="block text-sm font-medium">
+                        رقم الشقة
+                        <input
+                          value={apartment}
+                          onChange={(e) => {
+                            setApartment(e.target.value.slice(0, 6));
+                            clearError("apartment");
+                          }}
+                          inputMode="numeric"
+                          className={`${inputClass} tabular-nums`}
+                        />
+                        {errors.apartment && (
+                          <span className="mt-1 block text-sm font-normal text-tomato">{errors.apartment}</span>
+                        )}
+                      </label>
+                    </div>
+
                     <label className="block text-sm font-medium">
-                      العمارة والشقة
+                      وصف العنوان <span className="font-normal text-muted">(اختياري)</span>
                       <input
-                        value={address}
-                        onChange={(e) => {
-                          setAddress(e.target.value);
-                          clearError("address");
-                        }}
-                        placeholder="عمارة 12، شقة 5"
+                        value={addressNote}
+                        onChange={(e) => setAddressNote(e.target.value)}
+                        placeholder="مثال: الدور التالت، جنب المسجد"
                         className={inputClass}
                       />
-                      {errors.address && (
-                        <span className="mt-1 block text-sm font-normal text-tomato">{errors.address}</span>
-                      )}
+                    </label>
+
+                    <label className="block text-sm font-medium">
+                      ملاحظات للمندوب <span className="font-normal text-muted">(اختياري)</span>
+                      <textarea
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        rows={2}
+                        placeholder="مثال: رن قبل ما توصل"
+                        className={`${inputClass} resize-none`}
+                      />
                     </label>
 
                     <div>
@@ -421,17 +458,6 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                         {(Object.keys(subLabels) as SubPref[]).map((key) => (
                           <Choice key={key} selected={sub === key} onClick={() => setSub(key)}>
                             {subLabels[key]}
-                          </Choice>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="text-sm font-medium">الدفع بتحويل قبل التوصيل</p>
-                      <div className="mt-1.5 grid grid-cols-2 gap-2" role="radiogroup" aria-label="طريقة الدفع">
-                        {(Object.keys(payLabels) as PayMethod[]).map((key) => (
-                          <Choice key={key} selected={pay === key} onClick={() => setPay(key)}>
-                            {payLabels[key]}
                           </Choice>
                         ))}
                       </div>
@@ -446,6 +472,10 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                     <div className="flex justify-between">
                       <dt className="text-muted">التوصيل</dt>
                       <dd>{egp(DELIVERY_FEE)} ج.م</dd>
+                    </div>
+                    <div className="flex justify-between">
+                      <dt className="text-muted">الدفع</dt>
+                      <dd>كاش عند الاستلام</dd>
                     </div>
                     <div className="flex justify-between border-t border-line pt-2 text-base font-semibold">
                       <dt>الإجمالي</dt>
@@ -486,14 +516,11 @@ export default function Storefront({ cycle, nextId, onPlaced, goAdmin }: Props) 
                 </p>
 
                 <div className="mt-6 rounded-2xl bg-white p-4">
-                  <p className="text-sm text-muted">عشان نأكد الطلب، حوّل على {payLabels[placed.pay]}</p>
+                  <p className="text-sm text-muted">هتدفع كاش للمندوب عند الاستلام</p>
                   <p className="mt-1 font-display text-3xl font-extrabold tabular-nums">{egp(placed.total)} ج.م</p>
-                  <p className="mt-3 rounded-xl bg-mist px-3 py-2.5 text-sm" dir="ltr">
-                    {placed.pay === "instapay" ? "khazeenak@instapay" : "0100 000 0000"}
-                  </p>
-                  <p className="mt-2 text-xs text-muted">بيانات تحويل تجريبية للديمو.</p>
                   <p className="mt-3 text-sm leading-relaxed">
-                    بعد التحويل ابعت صورة الإيصال على واتساب، وهنبعتلك تأكيد قبل قفل الطلب.
+                    هنكلمك على <span className="tabular-nums" dir="ltr">{placed.order.phone}</span> قبل ما نتحرك. لو
+                    تقدر جهّز المبلغ على قده.
                   </p>
                 </div>
 
